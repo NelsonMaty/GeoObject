@@ -41,8 +41,7 @@ server.get(
                   description: data.description,
                   comment: data.comment,
                   _links: {
-                     continents: {
-                        rel : 'self',
+                     continent: {
                         href: 'http://localhost:' + config.port + "/continents/" + data.code,
                         type: 'application/json'
                      }
@@ -52,7 +51,10 @@ server.get(
             }
          );
          done(); //release the pg client back to the pool 
-         res.json(responseArray);
+         var cosa = {
+            "org.geoobject.model.Continent": responseArray
+         };
+         res.json(cosa);
       });
    });
 });
@@ -85,14 +87,17 @@ server.get(
                description: result.rows[0].description,
                comment: result.rows[0].comment,
                _links: {
-                  continents: {
+                  continent: {
                      rel : 'self',
                      href: 'http://localhost:' + config.port + "/continents/" + result.rows[0].code,
                      type: 'application/json'
                   }
                }
             };
-            res.json(dto);
+            var cosa = {
+               "org.geoobject.model.Continent" : dto
+            }
+            res.json(cosa);
          }
          done(); //release the pg client back to the pool 
       });
