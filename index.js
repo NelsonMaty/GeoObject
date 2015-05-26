@@ -23,38 +23,87 @@ server.get(
          //TODO respond with error code
          console.error('error fetching client from pool', err);
       }
-      //querying database
-      var sql = 'SELECT id, code, name, description, comment FROM geo_object.continent WHERE erased=false';
-      var responseArray = [];
-      client.query(sql, function(err, result) {
-         //Return if an error occurs
+
+      var sql_locale='SELECT DISTINCT locale FROM geo_object.continent';
+      var responseLocaleArray = [];
+
+      client.query(sql_locale, function(err, result){
+
+      	 //Return if an error occurs
          if(err) {
             console.error('error fetching client from pool', err);      
          }
-         // Storing result in an array
+
          result.rows.forEach(
             function(data) {
-               var dto = {
-                  id: data.id,
-                  code: data.code,
-                  name: data.name,
-                  description: data.description,
-                  comment: data.comment,
-                  _links: {
-                     continent: {
-                        href: 'http://localhost:' + config.port + "/continents/" + data.code,
-                        type: 'application/json'
-                     }
-                  }
-               };
-               responseArray.push(dto);
+               responseLocaleArray.push(data.locale);
             }
          );
-         done(); //release the pg client back to the pool 
-         var cosa = {
-            "org.geoobject.model.Continent": responseArray
-         };
-         res.json(cosa);
+
+	    // Header
+	    var locale = req.header('Accept-Language', 'es-AR');		//"es-AR" es el valor default en caso de ser null
+		var languagesArray = locale.match(/[a-zA-z\-]{2,10}/g) || [];
+        var resultDB = "";
+		languagesArray.every(
+			function(dataLang){
+				responseLocaleArray.every(
+					function(dataDB){
+						if(dataLang.toUpperCase() == dataDB.toUpperCase()){
+							resultDB = dataDB;
+							return false;
+						}
+						return true;
+					}
+				);
+				if(resultDB == "")
+					return false;
+				else return true;
+			}
+		); 
+		
+		console.log(resultDB);
+		console.log(locale);
+
+		if(resultDB == "") resultDB = "es-AR";
+
+        var sql = 'SELECT id, code, name, description, comment FROM geo_object.continent WHERE erased=false AND locale ilike ';
+	    sql += "'" + resultDB + "'";
+
+	      //sql += "any('{\"" + sql_like + "\"}')";
+	      //console.log(sql);
+
+	      var responseArray = [];
+	      client.query(sql, function(err, result) {
+	         //Return if an error occurs
+	         if(err) {
+	            console.error('error fetching client from pool', err);      
+	         }
+	         // Storing result in an array
+	         result.rows.forEach(
+	            function(data) {
+	               var dto = {
+	                  id: data.id,
+	                  code: data.code,
+	                  name: data.name,
+	                  description: data.description,
+	                  comment: data.comment,
+	                  _links: {
+	                     continent: {
+	                        href: 'http://localhost:' + config.port + "/continents/" + data.code,
+	                        type: 'application/json'
+	                     }
+	                  }
+	               };
+	               responseArray.push(dto);
+	            }
+	         );
+	         done(); //release the pg client back to the pool 
+	         var model = {
+	            "org.geoobject.model.Continent": responseArray
+	         };
+	         res.json(model);
+	      });
+
       });
    });
 });
@@ -94,10 +143,10 @@ server.get(
                   }
                }
             };
-            var cosa = {
+            var model = {
                "org.geoobject.model.Continent" : dto
             }
-            res.json(cosa);
+            res.json(model);
          }
          done(); //release the pg client back to the pool 
       });
@@ -148,10 +197,10 @@ server.get(
             }
          );
          done(); //release the pg client back to the pool 
-         var cosa = {
+         var model = {
             "org.geoobject.model.Country": responseArray
          };
-         res.json(cosa);
+         res.json(model);
       });
    });
 });
@@ -198,10 +247,10 @@ server.get(
                   }
                }
             };
-            var cosa = {
+            var model = {
                "org.geoobject.model.Country" : dto
             }
-            res.json(cosa);
+            res.json(model);
          }
          done(); //release the pg client back to the pool 
       });
@@ -258,10 +307,10 @@ server.get(
             }
          );
          done(); //release the pg client back to the pool 
-         var cosa = {
+         var model = {
             "org.geoobject.model.Country": responseArray
          };
-         res.json(cosa);
+         res.json(model);
       });
    });
 });
