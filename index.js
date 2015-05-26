@@ -36,7 +36,7 @@ server.get(
 
          result.rows.forEach(
             function(data) {
-               responseLocaleArray.push(data.locale);
+               responseLocaleArray.push(data.locale);          
             }
          );
 
@@ -89,7 +89,7 @@ server.get(
 	                  comment: data.comment,
 	                  _links: {
 	                     continent: {
-	                        href: 'http://localhost:' + config.port + "/continents/" + data.code,
+	                        href: 'http://'+config.host+':'+ config.port + "/continents/" + data.code,
 	                        type: 'application/json'
 	                     }
 	                  }
@@ -138,7 +138,7 @@ server.get(
                _links: {
                   continent: {
                      rel : 'self',
-                     href: 'http://localhost:' + config.port + "/continents/" + result.rows[0].code,
+                     href: 'http://'+config.host+':' + config.port + "/continents/" + result.rows[0].code,
                      type: 'application/json'
                   }
                }
@@ -188,7 +188,7 @@ server.get(
                   entity_code_iso_alfa2: data.entity_code_iso_alfa2,
                   _links: {
                      country: {
-                        href: 'http://localhost:' + config.port + "/countries/" + data.code_iso_alfa3,
+                        href: 'http://'+config.host+':'+ config.port + "/countries/" + data.code_iso_alfa3,
                         type: 'application/json'
                      }
                   }
@@ -242,7 +242,7 @@ server.get(
                	_links: {
                 	country: {
                     rel : 'self',
-                    href: 'http://localhost:' + config.port + "/countries/" + result.rows[0].code_iso_alfa3,
+                    href: 'http://'+config.host+':' + config.port + "/countries/" + result.rows[0].code_iso_alfa3,
                     type: 'application/json'
                   }
                }
@@ -294,11 +294,11 @@ server.get(
                   name: data.name,
                   _links: {
                      continent: {
-                     	href: 'http://localhost:' + config.port + "/continents/" + req.params.code,
+                     	href: 'http://'+config.host+':' + config.port + "/continents/" + req.params.code,
                         type: 'application/json'
                      },
                      country: {
-                        href: 'http://localhost:' + config.port + "/countries/" + data.code_iso_alfa3,
+                        href: 'http://'+config.host+':' + config.port + "/countries/" + data.code_iso_alfa3,
                         type: 'application/json'
                      }
                   }
