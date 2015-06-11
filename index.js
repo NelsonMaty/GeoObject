@@ -4,6 +4,10 @@ var fs      = require('fs');
 
 var server = restify.createServer();
 
+server.use(restify.CORS());
+server.use(restify.fullResponse());
+
+
 //reading config file
 var config = JSON.parse(fs.readFileSync('/etc/nodejs-config/GeoObject.json'));
 
