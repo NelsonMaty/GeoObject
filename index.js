@@ -277,7 +277,7 @@ server.get(
          console.error('error fetching client from pool', err);
       }
       //querying database
-      var sql = 'SELECT country.id, country.code_iso_alfa2, country.code_iso_alfa3, country.code_iso_num, country.name_iso, country.common_name, country.comment, country.citizenship, country.entity, country.entity_code_iso_alfa2, continent.name FROM geo_object.country country LEFT JOIN geo_object.continent continent ON country.continent_id = continent.id WHERE country.erased=false AND continent.code ilike ';
+      var sql = 'SELECT country.id, country.code_iso_alfa2, country.code_iso_alfa3, country.code_iso_num, country.name_iso, country.common_name, country.comment, country.citizenship, country.entity, country.entity_code_iso_alfa2 FROM geo_object.country country LEFT JOIN geo_object.continent continent ON country.continent_id = continent.id WHERE country.erased=false AND continent.code ilike ';
    		sql += "'" + req.params.code + "'";
    		sql += " ORDER BY common_name";
       var responseArray = [];
