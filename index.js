@@ -4,9 +4,10 @@ var fs      = require('fs');
 
 var server = restify.createServer();
 
-server.use(restify.CORS());
+// No 'Access-Control-Allow-Origin' header is present on the requested resource. 
+// Origin 'http://localhost:9000' is therefore not allowed access. 
+server.use(restify.CORS()); 
 server.use(restify.fullResponse());
-
 
 //reading config file
 var config = JSON.parse(fs.readFileSync('/etc/nodejs-config/GeoObject.json'));
